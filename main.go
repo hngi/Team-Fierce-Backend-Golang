@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/hngi/Team-Fierce.Backend-Golang/controller"
 )
 
 var (
@@ -27,8 +28,8 @@ func init() {
 func main() {
 	// Register routers
 	router := mux.NewRouter()
-	router.HandleFunc("/v1/sendmail", sendMailHandler)
-	router.HandleFunc("/v1/sendmailwithtemplate", sendMailWithTemplateHandler)
+	router.HandleFunc("/v1/sendmail", controller.SendMailHandler)
+	router.HandleFunc("/v1/sendmailwithtemplate", controller.SendMailWithTemplateHandler)
 
 	// Spin up basic web server with localhost:{port}
 	//localhost can be omitted
