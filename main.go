@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -26,10 +25,10 @@ func init() {
 }
 
 func main() {
+	// Register routers
 	router := mux.NewRouter()
-	router.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintln(w, "Email service here")
-	})
+	router.HandleFunc("/v1/sendmail", sendMailHandler)
+	router.HandleFunc("/v1/sendmailwithtemplate", sendMailWithTemplateHandler)
 
 	// Spin up basic web server with localhost:{port}
 	//localhost can be omitted
