@@ -1,4 +1,4 @@
-package controller
+package mailgun
 
 import (
 	"context"
@@ -21,8 +21,8 @@ type Mail struct {
 var domain string = os.Getenv("DOMAIN")
 var key string = os.Getenv("MG-PRIVATE-KEY")
 
-// SendMail takes in the mail object and sends
-func SendMail(m *Mail) (string, error) {
+// Send takes in the mail object and sends
+func (mg Mailer) Send(m *Mail) (string, error) {
 	mg := mailgun.NewMailgun(domain, key)
 
 	sender := m.Sender
@@ -47,8 +47,8 @@ func SendMail(m *Mail) (string, error) {
 	return id, err
 }
 
-//SendMailWithTemplate sends email with a space for a HTML input
-func SendMailWithTemplate(m *Mail) (string, error) {
+//SendWithTemplate sends email with a space for a HTML input
+func (mg Mailer) SendWithTemplate(m *Mail) (string, error) {
 	mg := mailgun.NewMailgun(domain, key)
 
 	sender := m.Sender

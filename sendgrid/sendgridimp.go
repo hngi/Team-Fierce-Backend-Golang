@@ -1,4 +1,4 @@
-package controller
+package sendgrid
 
 import (
   "fmt"
@@ -7,6 +7,7 @@ import (
 
   "github.com/sendgrid/sendgrid-go"
   "github.com/sendgrid/sendgrid-go/helpers/mail"
+  "github.com/hngi/Team-Fierce.Backend-Golang/model"
 )
 
 type sendgridstruct struct {
@@ -19,7 +20,8 @@ type sendgridstruct struct {
 	templatehtml string	
 }
 
-func sendgridtextmail(s *sendgridstruct) {
+//Send method from interface
+func (sg Mailer) Send(s *sendgridstruct) {
 	from := mail.NewEmail(s.Sendername, s.Sendermail)
 	subject := s.Sub
 	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
@@ -37,7 +39,8 @@ func sendgridtextmail(s *sendgridstruct) {
 }
 
 
-func sendgridtemplatemail(s *sendgridstruct) {
+//SendWithTemplate method
+func (sg Mailer) SendWithTemplate(s *sendgridstruct) {
 	from := mail.NewEmail(s.Sendermail, s.Sendermail)
 	subject := s.Sub
 	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
