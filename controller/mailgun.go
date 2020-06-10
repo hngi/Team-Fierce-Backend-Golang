@@ -1,10 +1,9 @@
 package controller
 
 import (
-	"os"
 	"context"
 	"fmt"
-	"log"
+	"os"
 	"time"
 
 	"github.com/mailgun/mailgun-go"
@@ -15,6 +14,7 @@ type Mail struct {
 	Sender    string
 	subject   string
 	Body      string
+	HTML      string
 	Recipient string
 }
 
@@ -22,7 +22,7 @@ var domain string = os.Getenv("DOMAIN")
 var key string = os.Getenv("MG-PRIVATE-KEY")
 
 // SendMail takes in the mail object and sends
-func SendMail(m *Mail) {
+func SendMail(m *Mail) (string, error) {
 	mg := mailgun.NewMailgun(domain, key)
 
 	sender := m.Sender
@@ -42,17 +42,28 @@ func SendMail(m *Mail) {
 	defer cancel()
 
 	// Send the message with a 10 second timeout
-	resp, id, err := mg.Send(message)
+	_, id, err := mg.Send(message)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("ID: %s Resp: %s\n", id, resp)
+	return id, err
 }
 
-func SendMailWithTemplate(m *Mail) {
-	
+func SendMailWithTemplate(m *Mail) (string, error) {
+	mg := mailgun.NewMailgun(domain, key)
+
+	sender := m.Sender
+	subject := m.subject
+	body := ""
+	recipient := m.Recipient
+
+	message := mg.NewMessage(sender, subject, body, recipient)
+	message.SetHtml(m.HTML)
+
+	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	_, id, err := mg.Send(message)
+
+	return id, err
 }
 func vaildate(key, email string) bool {
 	v := mailgun.NewEmailValidator(key)
