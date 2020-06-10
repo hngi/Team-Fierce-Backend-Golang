@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
 )
 
+var (
+	infoLogger  = log.New(os.Stdout, "INFO: ", log.LstdFlags)
+	debugLogger = log.New(os.Stdout, "DEBUG: ", log.LstdFlags)
+)
 var port string
 
 func init() {
@@ -28,6 +33,6 @@ func main() {
 
 	// Spin up basic web server with localhost:{port}
 	//localhost can be omitted
-	fmt.Printf("Serving on port %s...", port)
+	infoLogger.Printf("Serving on port %s...\n", port)
 	http.ListenAndServe(":"+port, router)
 }
