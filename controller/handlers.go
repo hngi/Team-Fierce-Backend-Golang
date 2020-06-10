@@ -1,14 +1,16 @@
-package main
+package controller
 
 import (
 	"fmt"
 	"net/http"
 )
 
-func sendMailHandler(w http.ResponseWriter, r *http.Request) {
+//SendMailHandler should send mail directly
+func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Sending mail")
 }
 
-func sendMailWithTemplateHandler(w http.ResponseWriter, r *http.Request) {
+//SendMailWithTemplateHandler should send mail with a template attached
+func SendMailWithTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Sending mail with template")
 }
