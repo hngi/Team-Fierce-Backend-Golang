@@ -47,6 +47,7 @@ func SendMail(m *Mail) (string, error) {
 	return id, err
 }
 
+//SendMailWithTemplate sends email with a space for a HTML input
 func SendMailWithTemplate(m *Mail) (string, error) {
 	mg := mailgun.NewMailgun(domain, key)
 
