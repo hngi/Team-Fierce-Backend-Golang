@@ -18,12 +18,15 @@ type Mail struct {
 	Recipient string
 }
 
+// Implements the MailService interface
+type Mailgun struct{}
+
 var domain string = os.Getenv("DOMAIN")
 var key string = os.Getenv("MG-PRIVATE-KEY")
 
 // Send takes in the mail object and sends
-func (mg Mailer) Send(m *Mail) (string, error) {
-	mg := mailgun.NewMailgun(domain, key)
+func (mg *Mailgun) Send(m *Mail) (string, error) {
+	mgClient := mailgun.NewMailgun(domain, key)
 
 	sender := m.Sender
 	subject := m.subject
@@ -36,36 +39,39 @@ func (mg Mailer) Send(m *Mail) (string, error) {
 		fmt.Print("recipient email is invalid")
 	}
 	// The message object allows you to add attachments and Bcc recipients
-	message := mg.NewMessage(sender, subject, body, recipient)
+	message := mgClient.NewMessage(sender, subject, body, recipient)
 
+	// Send the message with a 10 second timeout
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	// Send the message with a 10 second timeout
-	_, id, err := mg.Send(message)
+	_, id, err := mgClient.Send(message)
 
 	return id, err
 }
 
 //SendWithTemplate sends email with a space for a HTML input
-func (mg Mailer) SendWithTemplate(m *Mail) (string, error) {
-	mg := mailgun.NewMailgun(domain, key)
+func (mg *Mailgun) SendWithTemplate(m *Mail) (string, error) {
+	mgClient := mailgun.NewMailgun(domain, key)
 
 	sender := m.Sender
 	subject := m.subject
 	body := ""
 	recipient := m.Recipient
 
-	message := mg.NewMessage(sender, subject, body, recipient)
+	message := mgClient.NewMessage(sender, subject, body, recipient)
 	message.SetHtml(m.HTML)
 
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	_, id, err := mg.Send(message)
+	_, id, err := mgClient.Send(message)
 
 	return id, err
 }
+
+func (mg *Mailgun) SendMultiple() {}
+
 func vaildate(key, email string) bool {
 	v := mailgun.NewEmailValidator(key)
 
