@@ -26,13 +26,13 @@ func New() *Mailgun {
 }
 
 // Send takes in the mail object and sends
-func (mg *Mailgun) Send() (string, error) {
+func (mg *Mailgun) Send() {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := mg.mail.sender.email
-	subject := mg.mail.subject
-	body := mg.mail.body
-	recipient := mg.mail.recipient.email
+	sender := mg.mail.Sender.Email
+	subject := mg.mail.Subject
+	body := mg.mail.Body
+	recipient := mg.mail.Recipient.Email
 
 	ok := vaildate(key, recipient)
 
@@ -46,29 +46,27 @@ func (mg *Mailgun) Send() (string, error) {
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	_, id, err := mgClient.Send(message)
-
-	return id, err
+	//TODO: Return error if any
+	mgClient.Send(message)
 }
 
 //SendWithTemplate sends email with a space for a HTML input
-func (mg *Mailgun) SendWithTemplate() (string, error) {
+func (mg *Mailgun) SendWithTemplate() {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := mg.mail.sender
-	subject := mg.mail.subject
+	sender := mg.mail.Sender.Email
+	subject := mg.mail.Subject
 	body := ""
-	recipient := mg.mail.recipient
+	recipient := mg.mail.Recipient.Email
 
 	message := mgClient.NewMessage(sender, subject, body, recipient)
-	message.SetHtml(mg.mail.htmlBody)
+	message.SetHtml(mg.mail.HTMLBody)
 
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	_, id, err := mgClient.Send(message)
-
-	return id, err
+	//TODO: Return error if any
+	mgClient.Send(message)
 }
 
 //SendMultiple sends multiple emails

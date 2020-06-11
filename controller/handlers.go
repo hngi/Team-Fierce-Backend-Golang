@@ -14,7 +14,7 @@ func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	// Get mail service for transport
 	mService := NewMailerService(transport)
 	if mService == nil {
-		fmt.Fprintln("Please define a TRANSPORT")
+		fmt.Fprintln(w, "Please define a TRANSPORT")
 	}
 }
 
@@ -24,6 +24,6 @@ func SendMailWithTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	// Get mail service for transport
 	mService := NewMailerService(transport)
 	if mService == nil {
-		fmt.Fprintln("Please define a TRANSPORT")
+		fmt.Fprintln(w, "Please define a TRANSPORT")
 	}
 }

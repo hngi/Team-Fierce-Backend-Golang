@@ -22,10 +22,10 @@ func New() *Sendgrid {
 
 //Send method from interface
 func (sg *Sendgrid) Send() {
-	from := mail.NewEmail(sg.mail.sender.name, sg.mail.sender.email)
-	subject := sg.mail.subject
-	to := mail.NewEmail(sg.mail.recipient.name, sg.mail.recipient.email)
-	plainTextContent := sg.body
+	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
+	subject := sg.mail.Subject
+	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
+	plainTextContent := sg.mail.Body
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, "")
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -40,11 +40,11 @@ func (sg *Sendgrid) Send() {
 
 //SendWithTemplate method
 func (sg *Sendgrid) SendWithTemplate() {
-	from := mail.NewEmail(sg.mail.sender.name, sg.mail.sender.email)
-	subject := sg.mail.subject
-	to := mail.NewEmail(sg.mail.recipient.name, sg.mail.recipient.email)
-	plainTextContent := s.Contents
-	htmlContent := sg.mail.htmlBody
+	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
+	subject := sg.mail.Subject
+	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
+	plainTextContent := sg.mail.Body
+	htmlContent := sg.mail.HTMLBody
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -57,4 +57,5 @@ func (sg *Sendgrid) SendWithTemplate() {
 	}
 }
 
+//SendMultiple sends multiple emails
 func (sg *Sendgrid) SendMultiple() {}

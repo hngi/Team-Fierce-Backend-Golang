@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hngi/Team-Fierce.Backend-Golang/mailgun"
+	"github.com/hngi/Team-Fierce.Backend-Golang/model"
 	"github.com/hngi/Team-Fierce.Backend-Golang/sendgrid"
 )
 
@@ -15,7 +16,7 @@ const (
 
 //NewMailerService returns a MailerService
 //depending on what transport the user wants
-func NewMailerService(transport string) *MailerService {
+func NewMailerService(transport string) model.MailerService {
 	switch transport {
 	case tpSendgrid:
 		fmt.Printf("For transport %s, returning a Sendgrid mailer service", transport)
