@@ -13,11 +13,33 @@ const (
 	tpMailgun  = "MAILGUN"
 )
 
-//MailerService is an imterface
+//Sender details
+type sender struct {
+	name  string
+	email string
+}
+
+//Receipient details
+type receipient struct {
+	name  string
+	email string
+}
+
+//Mail contains mail data
+type Mail struct {
+	sender     *sender
+	receipient *receipient
+	subject    string
+	body       string
+	htmlBody   string
+}
+
+//MailerService for all mailing services
 type MailerService interface {
 	Send()
 	SendWithTemplate()
 	SendMultiple()
+	mail *Mail	//Every mailing service holds its mail
 }
 
 //NewMailerService returns a MailerService
