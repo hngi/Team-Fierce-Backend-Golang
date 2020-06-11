@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/hngi/Team-Fierce.Backend-Golang/model"
 	"github.com/mailgun/mailgun-go"
 )
 
@@ -14,17 +15,10 @@ var (
 	key    string = os.Getenv("MG-PRIVATE-KEY")
 )
 
-// Mail structure to be sent
-type Mail struct {
-	Sender    string
-	subject   string
-	Body      string
-	HTML      string
-	Recipient string
-}
-
 //Mailgun implements the MailService interface
-type Mailgun struct{}
+type Mailgun struct {
+	mail model.Mail
+}
 
 //New returns a new Mailgun instance
 func New() *Mailgun {
@@ -32,13 +26,13 @@ func New() *Mailgun {
 }
 
 // Send takes in the mail object and sends
-func (mg *Mailgun) Send(m *Mail) (string, error) {
+func (mg *Mailgun) Send() (string, error) {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := m.Sender
-	subject := m.subject
-	body := m.Body
-	recipient := m.Recipient
+	sender := mg.mail.sender.email
+	subject := mg.mail.subject
+	body := mg.mail.body
+	recipient := mg.mail.recipient.email
 
 	ok := vaildate(key, recipient)
 
@@ -58,16 +52,16 @@ func (mg *Mailgun) Send(m *Mail) (string, error) {
 }
 
 //SendWithTemplate sends email with a space for a HTML input
-func (mg *Mailgun) SendWithTemplate(m *Mail) (string, error) {
+func (mg *Mailgun) SendWithTemplate() (string, error) {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := m.Sender
-	subject := m.subject
+	sender := mg.mail.sender
+	subject := mg.mail.subject
 	body := ""
-	recipient := m.Recipient
+	recipient := mg.mail.recipient
 
 	message := mgClient.NewMessage(sender, subject, body, recipient)
-	message.SetHtml(m.HTML)
+	message.SetHtml(mg.mail.htmlBody)
 
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -77,6 +71,7 @@ func (mg *Mailgun) SendWithTemplate(m *Mail) (string, error) {
 	return id, err
 }
 
+//SendMultiple sends multiple emails
 func (mg *Mailgun) SendMultiple() {}
 
 func vaildate(key, email string) bool {

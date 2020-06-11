@@ -20,15 +20,15 @@ type sender struct {
 }
 
 //Receipient details
-type receipient struct {
+type recipient struct {
 	name  string
 	email string
 }
 
 //Mail contains mail data
 type Mail struct {
-	sender     *sender
-	receipient *receipient
+	sender     sender
+	recipient  recipient
 	subject    string
 	body       string
 	htmlBody   string

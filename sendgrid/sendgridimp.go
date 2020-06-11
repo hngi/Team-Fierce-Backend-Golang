@@ -5,22 +5,15 @@ import (
 	"log"
 	"os"
 
+	"github.com/hngi/Team-Fierce.Backend-Golang/model"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
-type sendgridstruct struct {
-	Sendername    string
-	Sendermail    string
-	Sub           string
-	Recipientname string
-	Recipientmail string
-	Contents      string
-	templatehtml  string
-}
-
 //Sendgrid implements the MailService interface
-type Sendgrid struct{}
+type Sendgrid struct {
+	mail model.Mail
+}
 
 //New return a new Sendgrid instance
 func New() *Sendgrid {
@@ -28,11 +21,11 @@ func New() *Sendgrid {
 }
 
 //Send method from interface
-func (sg *Sendgrid) Send(s *sendgridstruct) {
-	from := mail.NewEmail(s.Sendername, s.Sendermail)
-	subject := s.Sub
-	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
-	plainTextContent := s.Contents
+func (sg *Sendgrid) Send() {
+	from := mail.NewEmail(sg.mail.sender.name, sg.mail.sender.email)
+	subject := sg.mail.subject
+	to := mail.NewEmail(sg.mail.recipient.name, sg.mail.recipient.email)
+	plainTextContent := sg.body
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, "")
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -46,12 +39,12 @@ func (sg *Sendgrid) Send(s *sendgridstruct) {
 }
 
 //SendWithTemplate method
-func (sg *Sendgrid) SendWithTemplate(s *sendgridstruct) {
-	from := mail.NewEmail(s.Sendermail, s.Sendermail)
-	subject := s.Sub
-	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
+func (sg *Sendgrid) SendWithTemplate() {
+	from := mail.NewEmail(sg.mail.sender.name, sg.mail.sender.email)
+	subject := sg.mail.subject
+	to := mail.NewEmail(sg.mail.recipient.name, sg.mail.recipient.email)
 	plainTextContent := s.Contents
-	htmlContent := s.templatehtml
+	htmlContent := sg.mail.htmlBody
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
