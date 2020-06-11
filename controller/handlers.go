@@ -4,17 +4,29 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"github.com/hngi/Team-Fierce.Backend-Golang/model"
 )
 
-var transport = os.Getenv("TRANSPORT")
+// Please note that this env variable
+//should be declared in this program's execution environment,
+//not the environment you access the api with.
+var transport = os.Getenv("MAIL_TP")
 
 //SendMailHandler should send mail directly
 func SendMailHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Sending mail")
+	// Get mail service for defined transport
+	fmt.Printf("Defined transport is %s\n", transport)
+	mService := NewMailerService(transport)
+	if mService == nil {
+		fmt.Fprintln(w, "Please define a proper TRANSPORT")
+	}
 }
 
 //SendMailWithTemplateHandler should send mail with a template attached
 func SendMailWithTemplateHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Sending mail with template")
+	// Get mail service for defined transport
+	fmt.Printf("Defined transport is %s\n", transport)
+	mService := NewMailerService(transport)
+	if mService == nil {
+		fmt.Fprintln(w, "Please define a proper TRANSPORT")
+	}
 }

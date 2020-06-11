@@ -6,29 +6,33 @@ import (
 	"os"
 	"time"
 
+	"github.com/hngi/Team-Fierce.Backend-Golang/model"
 	"github.com/mailgun/mailgun-go"
 )
 
-// Mail structure to be sent
-type Mail struct {
-	Sender    string
-	subject   string
-	Body      string
-	HTML      string
-	Recipient string
+var (
+	domain string = os.Getenv("DOMAIN")
+	key    string = os.Getenv("MG-PRIVATE-KEY")
+)
+
+//Mailgun implements the MailService interface
+type Mailgun struct {
+	mail model.Mail
 }
 
-var domain string = os.Getenv("DOMAIN")
-var key string = os.Getenv("MG-PRIVATE-KEY")
+//New returns a new Mailgun instance
+func New() *Mailgun {
+	return &Mailgun{}
+}
 
 // Send takes in the mail object and sends
-func (mg Mailer) Send(m *Mail) (string, error) {
-	mg := mailgun.NewMailgun(domain, key)
+func (mg *Mailgun) Send() {
+	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := m.Sender
-	subject := m.subject
-	body := m.Body
-	recipient := m.Recipient
+	sender := mg.mail.Sender.Email
+	subject := mg.mail.Subject
+	body := mg.mail.Body
+	recipient := mg.mail.Recipient.Email
 
 	ok := vaildate(key, recipient)
 
@@ -36,36 +40,38 @@ func (mg Mailer) Send(m *Mail) (string, error) {
 		fmt.Print("recipient email is invalid")
 	}
 	// The message object allows you to add attachments and Bcc recipients
-	message := mg.NewMessage(sender, subject, body, recipient)
+	message := mgClient.NewMessage(sender, subject, body, recipient)
 
+	// Send the message with a 10 second timeout
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	// Send the message with a 10 second timeout
-	_, id, err := mg.Send(message)
-
-	return id, err
+	//TODO: Return error if any
+	mgClient.Send(message)
 }
 
 //SendWithTemplate sends email with a space for a HTML input
-func (mg Mailer) SendWithTemplate(m *Mail) (string, error) {
-	mg := mailgun.NewMailgun(domain, key)
+func (mg *Mailgun) SendWithTemplate() {
+	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := m.Sender
-	subject := m.subject
+	sender := mg.mail.Sender.Email
+	subject := mg.mail.Subject
 	body := ""
-	recipient := m.Recipient
+	recipient := mg.mail.Recipient.Email
 
-	message := mg.NewMessage(sender, subject, body, recipient)
-	message.SetHtml(m.HTML)
+	message := mgClient.NewMessage(sender, subject, body, recipient)
+	message.SetHtml(mg.mail.HTMLBody)
 
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	_, id, err := mg.Send(message)
-
-	return id, err
+	//TODO: Return error if any
+	mgClient.Send(message)
 }
+
+//SendMultiple sends multiple emails
+func (mg *Mailgun) SendMultiple() {}
+
 func vaildate(key, email string) bool {
 	v := mailgun.NewEmailValidator(key)
 
