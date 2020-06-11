@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -9,10 +9,6 @@ import (
 	"github.com/hngi/Team-Fierce.Backend-Golang/controller"
 )
 
-var (
-	infoLogger  = log.New(os.Stdout, "INFO: ", log.LstdFlags)
-	debugLogger = log.New(os.Stdout, "DEBUG: ", log.LstdFlags)
-)
 var port string
 
 func init() {
@@ -33,6 +29,6 @@ func main() {
 
 	// Spin up basic web server with localhost:{port}
 	//localhost can be omitted
-	infoLogger.Printf("Serving on port %s...\n", port)
+	fmt.Printf("Serving on port %s...\n", port)
 	http.ListenAndServe(":"+port, router)
 }
