@@ -1,27 +1,34 @@
 package sendgrid
 
 import (
-  "fmt"
-  "log"
-  "os"
+	"fmt"
+	"log"
+	"os"
 
-  "github.com/sendgrid/sendgrid-go"
-  "github.com/sendgrid/sendgrid-go/helpers/mail"
-  "github.com/hngi/Team-Fierce.Backend-Golang/model"
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 type sendgridstruct struct {
-	Sendername string
-	Sendermail string
-	Sub string
+	Sendername    string
+	Sendermail    string
+	Sub           string
 	Recipientname string
 	Recipientmail string
-	Contents string
-	templatehtml string	
+	Contents      string
+	templatehtml  string
+}
+
+//Sendgrid implements the MailService interface
+type Sendgrid struct{}
+
+//New return a new Sendgrid instance
+func New() *Sendgrid {
+	return &Sendgrid{}
 }
 
 //Send method from interface
-func (sg Mailer) Send(s *sendgridstruct) {
+func (sg *Sendgrid) Send(s *sendgridstruct) {
 	from := mail.NewEmail(s.Sendername, s.Sendermail)
 	subject := s.Sub
 	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
@@ -38,9 +45,8 @@ func (sg Mailer) Send(s *sendgridstruct) {
 	}
 }
 
-
 //SendWithTemplate method
-func (sg Mailer) SendWithTemplate(s *sendgridstruct) {
+func (sg *Sendgrid) SendWithTemplate(s *sendgridstruct) {
 	from := mail.NewEmail(s.Sendermail, s.Sendermail)
 	subject := s.Sub
 	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
@@ -57,3 +63,5 @@ func (sg Mailer) SendWithTemplate(s *sendgridstruct) {
 		fmt.Println(response.Headers)
 	}
 }
+
+func (sg *Sendgrid) SendMultiple() {}

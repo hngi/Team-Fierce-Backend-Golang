@@ -9,6 +9,11 @@ import (
 	"github.com/mailgun/mailgun-go"
 )
 
+var (
+	domain string = os.Getenv("DOMAIN")
+	key    string = os.Getenv("MG-PRIVATE-KEY")
+)
+
 // Mail structure to be sent
 type Mail struct {
 	Sender    string
@@ -18,11 +23,13 @@ type Mail struct {
 	Recipient string
 }
 
-// Implements the MailService interface
+//Mailgun implements the MailService interface
 type Mailgun struct{}
 
-var domain string = os.Getenv("DOMAIN")
-var key string = os.Getenv("MG-PRIVATE-KEY")
+//New returns a new Mailgun instance
+func New() *Mailgun {
+	return &Mailgun{}
+}
 
 // Send takes in the mail object and sends
 func (mg *Mailgun) Send(m *Mail) (string, error) {
