@@ -1,4 +1,4 @@
-package model
+package controller
 
 import (
 	"fmt"
@@ -12,35 +12,6 @@ const (
 	tpSendgrid = "SENDGRID"
 	tpMailgun  = "MAILGUN"
 )
-
-//Sender details
-type sender struct {
-	name  string
-	email string
-}
-
-//Receipient details
-type recipient struct {
-	name  string
-	email string
-}
-
-//Mail contains mail data
-type Mail struct {
-	sender     sender
-	recipient  recipient
-	subject    string
-	body       string
-	htmlBody   string
-}
-
-//MailerService for all mailing services
-type MailerService interface {
-	Send()
-	SendWithTemplate()
-	SendMultiple()
-	mail *Mail	//Every mailing service holds its mail
-}
 
 //NewMailerService returns a MailerService
 //depending on what transport the user wants
