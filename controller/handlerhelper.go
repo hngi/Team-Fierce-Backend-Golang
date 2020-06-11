@@ -10,8 +10,8 @@ import (
 
 // Transport types
 const (
-	tpSendgrid = "SENDGRID"
-	tpMailgun  = "MAILGUN"
+	tpSendgrid = "sendgrid"
+	tpMailgun  = "mailgun"
 )
 
 //NewMailerService returns a MailerService
