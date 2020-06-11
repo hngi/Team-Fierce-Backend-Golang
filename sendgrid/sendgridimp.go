@@ -1,31 +1,31 @@
 package sendgrid
 
 import (
-	"fmt"
-	"log"
-	"os"
+  "fmt"
+  "log"
+  "os"
 
-	"github.com/hngi/Team-Fierce.Backend-Golang/model"
-	"github.com/sendgrid/sendgrid-go"
-	"github.com/sendgrid/sendgrid-go/helpers/mail"
+  "github.com/sendgrid/sendgrid-go"
+  "github.com/sendgrid/sendgrid-go/helpers/mail"
+  "github.com/hngi/Team-Fierce.Backend-Golang/model"
 )
 
-//Sendgrid implements the MailService interface
-type Sendgrid struct {
-	mail model.Mail
-}
-
-//New return a new Sendgrid instance
-func New() *Sendgrid {
-	return &Sendgrid{}
+type sendgridstruct struct {
+	Sendername string
+	Sendermail string
+	Sub string
+	Recipientname string
+	Recipientmail string
+	Contents string
+	templatehtml string	
 }
 
 //Send method from interface
-func (sg *Sendgrid) Send() {
-	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
-	subject := sg.mail.Subject
-	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
-	plainTextContent := sg.mail.Body
+func (sg Mailer) Send(s *sendgridstruct) {
+	from := mail.NewEmail(s.Sendername, s.Sendermail)
+	subject := s.Sub
+	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
+	plainTextContent := s.Contents
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, "")
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -38,13 +38,14 @@ func (sg *Sendgrid) Send() {
 	}
 }
 
+
 //SendWithTemplate method
-func (sg *Sendgrid) SendWithTemplate() {
-	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
-	subject := sg.mail.Subject
-	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
-	plainTextContent := sg.mail.Body
-	htmlContent := sg.mail.HTMLBody
+func (sg Mailer) SendWithTemplate(s *sendgridstruct) {
+	from := mail.NewEmail(s.Sendermail, s.Sendermail)
+	subject := s.Sub
+	to := mail.NewEmail(s.Recipientname, s.Recipientmail)
+	plainTextContent := s.Contents
+	htmlContent := s.templatehtml
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -56,6 +57,3 @@ func (sg *Sendgrid) SendWithTemplate() {
 		fmt.Println(response.Headers)
 	}
 }
-
-//SendMultiple sends multiple emails
-func (sg *Sendgrid) SendMultiple() {}
