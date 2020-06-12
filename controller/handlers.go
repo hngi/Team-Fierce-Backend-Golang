@@ -8,7 +8,7 @@ import (
 
 // Please note that this env variable
 //should be declared in this program's execution environment,
-//not the environment you access the api with.
+//not the environment you access the api from.
 var transport = os.Getenv("MAIL_TP")
 
 //SendMailHandler should send mail directly
