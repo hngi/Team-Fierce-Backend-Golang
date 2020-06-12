@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,7 +18,16 @@ var transport = os.Getenv("MAIL_TP")
 //SendMailHandler should send mail directly
 func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	// Get mail service for defined transport
-	NewMailerService(transport)
+	mService := NewMailerService(transport)
+	//Get the mail struct for the service
+	mail := mService.GetMail()
+	//Parse request body into mail
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(mail); err != nil {
+		fmt.Fprintln(w, "Invalid request body")
+	}
+
+	fmt.Fprintln(w, mail)
 }
 
 //SendMailWithTemplateHandler should send mail with a template attached
