@@ -12,7 +12,7 @@ import (
 
 //Sendgrid implements the MailService interface
 type Sendgrid struct {
-	mail model.Mail
+	Mail model.Mail
 }
 
 //New return a new Sendgrid instance
@@ -20,12 +20,17 @@ func New() *Sendgrid {
 	return &Sendgrid{}
 }
 
+//GetMail returns a reference to the embedded mail struct
+func (sg *Sendgrid) GetMail() *model.Mail {
+	return &sg.Mail
+}
+
 //Send method from interface
 func (sg *Sendgrid) Send() {
-	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
-	subject := sg.mail.Subject
-	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
-	plainTextContent := sg.mail.Body
+	from := mail.NewEmail(sg.Mail.Sender.Name, sg.Mail.Sender.Email)
+	subject := sg.Mail.Subject
+	to := mail.NewEmail(sg.Mail.Recipient.Name, sg.Mail.Recipient.Email)
+	plainTextContent := sg.Mail.Body
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, "")
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -40,11 +45,11 @@ func (sg *Sendgrid) Send() {
 
 //SendWithTemplate method
 func (sg *Sendgrid) SendWithTemplate() {
-	from := mail.NewEmail(sg.mail.Sender.Name, sg.mail.Sender.Email)
-	subject := sg.mail.Subject
-	to := mail.NewEmail(sg.mail.Recipient.Name, sg.mail.Recipient.Email)
-	plainTextContent := sg.mail.Body
-	htmlContent := sg.mail.HTMLBody
+	from := mail.NewEmail(sg.Mail.Sender.Name, sg.Mail.Sender.Email)
+	subject := sg.Mail.Subject
+	to := mail.NewEmail(sg.Mail.Recipient.Name, sg.Mail.Recipient.Email)
+	plainTextContent := sg.Mail.Body
+	htmlContent := sg.Mail.HTMLBody
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
