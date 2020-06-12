@@ -31,7 +31,7 @@ func (mg *Mailgun) GetMail() *model.Mail {
 }
 
 // Send takes in the mail object and sends
-func (mg *Mailgun) Send() {
+func (mg *Mailgun) Send() error {
 	mgClient := mailgun.NewMailgun(domain, key)
 
 	sender := mg.Mail.Sender.Email
@@ -52,7 +52,8 @@ func (mg *Mailgun) Send() {
 	defer cancel()
 
 	//TODO: Return error if any
-	mgClient.Send(message)
+	_, _, err := mgClient.Send(message)
+	return err
 }
 
 //SendWithTemplate sends email with a space for a HTML input

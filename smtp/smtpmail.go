@@ -1,7 +1,6 @@
 package smtp
 
 import (
-	"log"
 	"net/smtp"
 	"os"
 
@@ -30,7 +29,7 @@ func (s *SMTP) GetMail() *model.Mail {
 }
 
 // Send email with smtp
-func (s *SMTP) Send() {
+func (s *SMTP) Send() error {
 	from := s.Mail.Sender.Email
 	to := s.Mail.Recipient.Email
 	subject := s.Mail.Subject
@@ -41,9 +40,7 @@ func (s *SMTP) Send() {
 			body)
 	auth := smtp.PlainAuth("", from, password, hostname)
 	err := smtp.SendMail(hostname+":"+port, auth, from, []string{to}, msg)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return err
 }
 
 func (s *SMTP) SendWithTemplate() {}

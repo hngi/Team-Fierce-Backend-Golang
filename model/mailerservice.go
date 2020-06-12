@@ -4,7 +4,7 @@ package model
 type MailerService interface {
 	// Common methods
 	GetMail() *Mail // Return a reference to the embedded mail struct for updating
-	Send()
+	Send() error
 	SendWithTemplate()
 	SendMultiple()
 }

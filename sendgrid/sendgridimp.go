@@ -26,21 +26,15 @@ func (sg *Sendgrid) GetMail() *model.Mail {
 }
 
 //Send method from interface
-func (sg *Sendgrid) Send() {
+func (sg *Sendgrid) Send() error {
 	from := mail.NewEmail(sg.Mail.Sender.Name, sg.Mail.Sender.Email)
 	subject := sg.Mail.Subject
 	to := mail.NewEmail(sg.Mail.Recipient.Name, sg.Mail.Recipient.Email)
 	plainTextContent := sg.Mail.Body
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, "")
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
-	response, err := client.Send(message)
-	if err != nil {
-		log.Println(err)
-	} else {
-		fmt.Println(response.StatusCode)
-		fmt.Println(response.Body)
-		fmt.Println(response.Headers)
-	}
+	_, err := client.Send(message)
+	return err
 }
 
 //SendWithTemplate method

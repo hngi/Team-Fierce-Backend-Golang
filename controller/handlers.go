@@ -28,7 +28,9 @@ func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Try to send mail
-	mService.Send()
+	if err := mService.Send(); err != nil {
+		fmt.Fprintln(w, err)
+	}
 	fmt.Fprintln(w, "Email sent")
 }
 
