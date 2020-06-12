@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"github.com/hngi/Team-Fierce.Backend-Golang/model"
+	"io/ioutil"
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -24,11 +26,11 @@ func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	mail := mService.GetMail()
 
 	//validate request
-	request := Mail{}
+	request := model.Mail{}
 	body, _ := ioutil.ReadAll(r.Body)
   	json.Unmarshal(body, &request)
   	validate := validator.New()
- 	err = validate.Struct(request)
+ 	err := validate.Struct(request)
   if err != nil {
     fmt.Println(err.Error())
     fmt.Fprintf(w, "invalid request")
