@@ -17,7 +17,7 @@ var (
 
 //Mailgun implements the MailService interface
 type Mailgun struct {
-	mail model.Mail
+	Mail model.Mail
 }
 
 //New returns a new Mailgun instance
@@ -25,14 +25,19 @@ func New() *Mailgun {
 	return &Mailgun{}
 }
 
+//GetMail returns a reference to the embedded mail struct
+func (mg *Mailgun) GetMail() *model.Mail {
+	return &mg.Mail
+}
+
 // Send takes in the mail object and sends
-func (mg *Mailgun) Send() {
+func (mg *Mailgun) Send() error {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := mg.mail.Sender.Email
-	subject := mg.mail.Subject
-	body := mg.mail.Body
-	recipient := mg.mail.Recipient.Email
+	sender := mg.Mail.Sender.Email
+	subject := mg.Mail.Subject
+	body := mg.Mail.Body
+	recipient := mg.Mail.Recipient.Email
 
 	ok := vaildate(key, recipient)
 
@@ -47,20 +52,21 @@ func (mg *Mailgun) Send() {
 	defer cancel()
 
 	//TODO: Return error if any
-	mgClient.Send(message)
+	_, _, err := mgClient.Send(message)
+	return err
 }
 
 //SendWithTemplate sends email with a space for a HTML input
 func (mg *Mailgun) SendWithTemplate() {
 	mgClient := mailgun.NewMailgun(domain, key)
 
-	sender := mg.mail.Sender.Email
-	subject := mg.mail.Subject
+	sender := mg.Mail.Sender.Email
+	subject := mg.Mail.Subject
 	body := ""
-	recipient := mg.mail.Recipient.Email
+	recipient := mg.Mail.Recipient.Email
 
 	message := mgClient.NewMessage(sender, subject, body, recipient)
-	message.SetHtml(mg.mail.HTMLBody)
+	message.SetHtml(mg.Mail.HTMLBody)
 
 	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()

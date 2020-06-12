@@ -24,8 +24,8 @@ func init() {
 func main() {
 	// Register routers
 	router := mux.NewRouter()
-	router.HandleFunc("/v1/sendmail", controller.SendMailHandler)
-	router.HandleFunc("/v1/sendmailwithtemplate", controller.SendMailWithTemplateHandler)
+	router.HandleFunc("/v1/sendmail", controller.SendMailHandler).Methods(http.MethodPost)
+	router.HandleFunc("/v1/sendmailwithtemplate", controller.SendMailWithTemplateHandler).Methods(http.MethodPost)
 
 	// Spin up basic web server with localhost:{port}
 	//localhost can be omitted
