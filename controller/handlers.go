@@ -27,7 +27,9 @@ func SendMailHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Invalid request body")
 	}
 
-	fmt.Fprintln(w, mail)
+	// Try to send mail
+	mService.Send()
+	fmt.Fprintln(w, "Email sent")
 }
 
 //SendMailWithTemplateHandler should send mail with a template attached
