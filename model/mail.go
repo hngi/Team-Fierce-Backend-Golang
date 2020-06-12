@@ -2,21 +2,21 @@ package model
 
 //Sender details
 type sender struct {
-	Name  string
-	Email string
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 //Receipient details
 type recipient struct {
-	Name  string
-	Email string
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 //Mail contains mail data
 type Mail struct {
-	Sender    sender
-	Recipient recipient
-	Subject   string
-	Body      string
-	HTMLBody  string
+	Sender    sender    `json:"sender"`
+	Recipient recipient `json:"recipient"`
+	Subject   string    `json:"subject"`
+	Body      string    `json:"body"`
+	HTMLBody  string    `json:"htmlbody"`
 }
