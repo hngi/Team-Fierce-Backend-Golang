@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/hngi/Team-Fierce.Backend-Golang/smtp"
 	"fmt"
 
 	"github.com/hngi/Team-Fierce.Backend-Golang/mailgun"
@@ -25,7 +26,7 @@ func NewMailerService(transport string) model.MailerService {
 		fmt.Printf("For transport %s, returning a Mailgun mailer service", transport)
 		return mailgun.New()
 	default:
-		fmt.Printf("Transport %s not recognized\n", transport)
-		return nil
+		fmt.Printf("Using %s Transport\n", "SMTP")
+		return smtp.New()
 	}
 }
