@@ -18,5 +18,5 @@ type Mail struct {
 	Recipient recipient `json:"recipient" validate:"required,email"`
 	Subject   string    `json:"subject" validate:"required"`
 	Body      string    `json:"body" validate:"required"`
-	HTMLBody  string    `json:"htmlbody" validate:"required"`
+	HTMLBody  string    `json:"htmlbody"`
 }

@@ -33,7 +33,7 @@ func SendMailHandler(w http.ResponseWriter, r *http.Request) {
  	err := validate.Struct(request)
   if err != nil {
     fmt.Println(err.Error())
-    fmt.Fprintf(w, "invalid request")
+    fmt.Fprintf(w, "invalid request ")
   }
 
 	//Parse request body into mail
