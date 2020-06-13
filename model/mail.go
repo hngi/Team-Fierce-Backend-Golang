@@ -2,21 +2,21 @@ package model
 
 //Sender details
 type sender struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name  string `json:"name" validate:"required"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 //Receipient details
 type recipient struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name  string `json:"name" validate:"required"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 //Mail contains mail data
 type Mail struct {
-	Sender    sender    `json:"sender"`
-	Recipient recipient `json:"recipient"`
-	Subject   string    `json:"subject"`
-	Body      string    `json:"body"`
+	Sender    sender    `json:"sender" validate:"required,email"`
+	Recipient recipient `json:"recipient" validate:"required,email"`
+	Subject   string    `json:"subject" validate:"required"`
+	Body      string    `json:"body" validate:"required"`
 	HTMLBody  string    `json:"htmlbody"`
 }
